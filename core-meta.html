@@ -5,22 +5,21 @@ license that can be found in the LICENSE file.
 -->
 <!--
 /**
- * @module Polymer Core Elements
- */
-/**
- * The `core-meta` elements provides a method of constructing a 
- * self-organizing database.  It is useful to collate element meta-data for 
- * things like catalogs and for sandbox.
+ * @group Polymer Core Elements
+ *
+ * `core-meta` provides a method of constructing a self-organizing database.
+ * It is useful to collate element meta-data for things like catalogs and for 
+ * designer.
  *
  * Example, an element folder has a `metadata.html` file in it, that contains a 
- * core-meta, something like this:
+ * `core-meta`, something like this:
  *
- *     <core-meta id="my-element">
- *       <property name="color" type="color"></property>
+ *     <core-meta id="my-element" label="My Element">
+ *       <property name="color" value="blue"></property>
  *     </core-meta>
  *
  * An application can import as many of these files as it wants, and then use 
- * core-meta again to access the collected data.
+ * `core-meta` again to access the collected data.
  *
  *     <script>
  *       var meta = document.createElement('core-meta');
@@ -34,23 +33,40 @@ license that can be found in the LICENSE file.
  *       console.log(meta.byId('my-element'));
  *     </script>
  *
- * By default all meta-data are stored in a signle databse.  If your meta-data 
+ * By default all meta-data are stored in a single databse.  If your meta-data 
  * have different types and want them to be stored separately, use `type` to 
  * differentiate them.
  *
- * @class core-meta
+ * Example:
+ *
+ *     <core-meta id="x-foo" type="xElt"></core-meta>
+ *     <core-meta id="x-bar" type="xElt"></core-meta>
+ *     <core-meta id="y-bar" type="yElt"></core-meta>
+ *
+ *     <script>
+ *       var meta = document.createElement('core-meta');
+ *       meta.type = 'xElt';
+ *       console.log(meta.list);
+ *     </script>
+ *
+ * @element core-meta
+ * @homepage github.io
  */
 -->
+
 <link rel="import" href="../polymer/polymer.html">
 
 <polymer-element name="core-meta" attributes="list label type">
+
   <script>
+  
     (function() {
+      
       var SKIP_ID = 'meta';
       var metaData = {}, metaArray = {};
 
       Polymer('core-meta', {
-        alwaysPrepare: true,
+        
         /**
          * The type of meta-data.  All meta-data with the same type with be
          * stored together.
@@ -60,9 +76,13 @@ license that can be found in the LICENSE file.
          * @default 'default'
          */
         type: 'default',
+        
+        alwaysPrepare: true,
+        
         ready: function() {
           this.idChanged();
         },
+        
         get metaArray() {
           var t = this.type;
           if (!metaArray[t]) {
@@ -70,6 +90,7 @@ license that can be found in the LICENSE file.
           }
           return metaArray[t];
         },
+        
         get metaData() {
           var t = this.type;
           if (!metaData[t]) {
@@ -77,6 +98,7 @@ license that can be found in the LICENSE file.
           }
           return metaData[t];
         },
+        
         idChanged: function(old) {
           if (this.id && this.id !== SKIP_ID) {
             this.unregister(this, old);
@@ -84,6 +106,7 @@ license that can be found in the LICENSE file.
             this.metaArray.push(this);
           }
         },
+        
         unregister: function(meta, id) {
           delete this.metaData[id || meta.id];
           var i = this.metaArray.indexOf(meta);
@@ -91,6 +114,7 @@ license that can be found in the LICENSE file.
             this.metaArray.splice(i, 1);
           }
         },
+        
         /**
          * Returns a list of all meta-data elements with the same type.
          * 
@@ -101,27 +125,7 @@ license that can be found in the LICENSE file.
         get list() {
           return this.metaArray;
         },
-        /**
-         * Returns the first `<template>` in the `<core-meta>` subtree. This
-         * is useful to store element example.
-         *
-         *     <core-meta id="polymer-ui-toolbar" label="Polymer Toolbar">
-         *       <template>
-         *         <polymer-ui-toolbar theme="polymer-ui-light-theme">
-         *           <polymer-ui-icon-button icon="menu"></polymer-ui-icon-button>
-         *           <div flex>Title</div>
-         *           <polymer-ui-icon-button icon="add"></polymer-ui-icon-button>
-         *         </polymer-ui-toolbar>
-         *       </template>
-         *     </core-meta>
-         * 
-         * @attribute archetype
-         * @type node
-         * @default null
-         */
-        get archetype() {
-          return this.querySelector('template');
-        },
+        
         /**
          * Retrieves meta-data by ID.
          *
@@ -131,11 +135,12 @@ license that can be found in the LICENSE file.
          */
         byId: function(id) {
           return this.metaData[id];
-        },
-        get childMetas() {
-          return this.querySelectorAll(this.localName);
         }
+        
       });
+      
     })();
+    
   </script>
+  
 </polymer-element>

@@ -2,34 +2,49 @@
 <html>
 <head>
   <title>core-meta</title>
+  
   <script src="../platform/platform.js"></script>
   <link rel="import" href="core-meta.html">
 </head>
+
 <body>
+
   <core-meta id="x-foo" label="foo"></core-meta>
   <core-meta id="x-bar" label="bar"></core-meta>
-  <core-meta id="x-zot" label="zot">
-    <template>
-      <div>[zot's metadata]</div>
-    </template>
-  </core-meta>
+  <core-meta id="x-zot" label="zot"></core-meta>
   
-  <template repeat="{{metadata}}">
+  <core-meta id="apple" label="apple" type="fruit"></core-meta>
+  <core-meta id="orange" label="orange" type="fruit"></core-meta>
+  <core-meta id="grape" label="grape" type="fruit"></core-meta>
+  
+  <h2>meta-data</h2>
+  
+  <template id="default" repeat="{{metadata}}">
     <div>{{label}}</div>
   </template>
   
-  <hr>
+  <h2>meta-data (type: fruit)</h2>
+  
+  <template id="fruit" repeat="{{metadata}}">
+    <div>{{label}}</div>
+  </template>
   
   <script>
+  
     document.addEventListener('polymer-ready', function() {
       var meta = document.createElement('core-meta');
-      document.querySelector('template[repeat]').model = {
+      document.querySelector('template#default').model = {
         metadata: meta.list
       };
       
-      var archetype = meta.byId('x-zot').archetype;
-      document.body.appendChild(archetype.createInstance().querySelector('*'));
+      var fruitMeta = document.createElement('core-meta');
+      fruitMeta.type = 'fruit';
+      document.querySelector('template#fruit').model = {
+        metadata: fruitMeta.list
+      };
     });
+    
   </script>
+  
 </body>
 </html>

@@ -1,4 +1,4 @@
 core-meta
 =========
 
-Polymer Core Meta
+See //polymer.github.io/core-meta

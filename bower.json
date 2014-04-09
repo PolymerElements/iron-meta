@@ -1,5 +1,5 @@
 {
-  "name": "core-ajax",
+  "name": "core-meta",
   "private": true,
   "dependencies": {
     "polymer": "Polymer/polymer#master"

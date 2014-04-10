@@ -82,7 +82,7 @@ Example:
         alwaysPrepare: true,
         
         ready: function() {
-          this.idChanged();
+          this.register(this.id);
         },
         
         get metaArray() {
@@ -101,10 +101,10 @@ Example:
           return metaData[t];
         },
         
-        idChanged: function(old) {
-          if (this.id && this.id !== SKIP_ID) {
+        register: function(id, old) {
+          if (id && id !== SKIP_ID) {
             this.unregister(this, old);
-            this.metaData[this.id] = this;
+            this.metaData[id] = this;
             this.metaArray.push(this);
           }
         },

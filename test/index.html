@@ -11,13 +11,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
 
-  <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../core-component-page/core-component-page.html">
+  <meta charset="utf-8">
+  <title>Tests</title>
+  <script src="../../web-component-tester/browser.js"></script>
 
 </head>
 <body>
 
-  <core-component-page></core-component-page>
+  <script>
+
+    WCT.loadSuites([
+      'basic.html'
+    ]);
+
+  </script>
 
 </body>
 </html>

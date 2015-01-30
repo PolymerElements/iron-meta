@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
-  <core-meta id="info" keyUrl="foo/bar"></core-meta>
+  <core-meta id="info" value="foo/bar"></core-meta>
 
   <script>
 
@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('byId', function() {
         var meta = document.createElement('core-meta');
-        assert.equal(meta.byId('info').getAttribute('keyUrl'), 'foo/bar');
+        assert.equal(meta.byId('info'), 'foo/bar');
       });
 
       test('list', function() {

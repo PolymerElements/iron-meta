@@ -68,12 +68,54 @@ Or, in a Polymer element, you can include a meta in your template:
          * @type String
          * @default 'default'
          */
-        type: String
+        type: String,
+
+        /**
+         * The value of the meta-data to store. If no value is specified, the
+         * value defualts to a self reference (`this`).
+         *
+         * @attribute value
+         * @type *
+         * @default this
+         */
+        value: String,
+
+        /**
+         * The key used to store the `value` under the `type` namespace.
+         * Defaults to the `id` value.
+         *
+         * @attribute key
+         * @type String
+         * @default this.id
+         */
+        key: String
+      },
+
+      bind: {
+        value: 'valueChanged',
+        key: 'keyChanged'
       },
 
       ready: function() {
         this.type = this.type || 'default';
-        this.register(this.id);
+
+        if (this.key === undefined) {
+          this.key = this.id;
+        }
+
+        if (this.value === undefined) {
+          this.value = this;
+        }
+
+        this.resetRegistration(this.key, this.value);
+      },
+
+      valueChanged: function (newValue, oldValue) {
+        this.resetRegistration(this.key, oldValue);
+      },
+
+      keyChanged: function (newKey, oldKey) {
+        this.resetRegistration(oldKey, this.value);
       },
 
       get metaArray() {
@@ -92,24 +134,39 @@ Or, in a Polymer element, you can include a meta in your template:
         return metaData[t];
       },
 
-      register: function(id, old) {
-        if (id && id !== SKIP_ID) {
-          this.unregister(this, old);
-          this.metaData[id] = this;
-          this.metaArray.push(this);
+      resetRegistration: function (oldKey, oldValue) {
+        this.unregister(oldKey, oldValue);
+        this.registerSelf();
+      },
+
+      unregisterSelf: function () {
+        this.unregister(this.key, this.value);
+      },
+
+      registerSelf: function() {
+        var key = this.key;
+        if (key !== '' && key !== SKIP_ID) {
+          this.metaData[key] = this.value;
+          this.metaArray.push(this.value);
         }
       },
 
-      unregister: function(meta, id) {
-        delete this.metaData[id || meta.id];
-        var i = this.metaArray.indexOf(meta);
-        if (i >= 0) {
-          this.metaArray.splice(i, 1);
+      unregister: function(key, value) {
+        var index;
+
+        if (!(key in this.metaData)) {
+          return;
+        }
+
+        delete this.metaData[key];
+        index = this.metaArray.indexOf(value);
+        if (index >= 0) {
+          this.metaArray.splice(index, 1);
         }
       },
 
       /**
-       * Returns a list of all meta-data elements with the same type.
+       * Returns a list of all meta-data values within the same type.
        *
        * @property list
        * @type Array
@@ -119,14 +176,25 @@ Or, in a Polymer element, you can include a meta in your template:
       },
 
       /**
-       * Retrieves meta-data by id.
+       * Retrieves meta data value by key.
+       *
+       * @method byKey
+       * @param {String} key The id of the meta-data to be returned.
+       * @returns *
+       */
+      byKey: function(key) {
+        return this.metaData[key];
+      },
+
+      /**
+       * Retrieves meta data value by id, alias for byKey.
        *
        * @method byId
        * @param {String} id The id of the meta-data to be returned.
-       * @returns meta-data
+       * @returns *
        */
       byId: function(id) {
-        return this.metaData[id];
+        return this.byKey(id);
       }
 
     });

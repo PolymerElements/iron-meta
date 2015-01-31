@@ -96,17 +96,15 @@ Or, in a Polymer element, you can include a meta in your template:
         key: 'keyChanged'
       },
 
+      configure: function () {
+        return {
+          type: 'default',
+          key: this.id,
+          value: this
+        };
+      },
+
       ready: function() {
-        this.type = this.type || 'default';
-
-        if (this.key === undefined) {
-          this.key = this.id;
-        }
-
-        if (this.value === undefined) {
-          this.value = this;
-        }
-
         this.resetRegistration(this.key, this.value);
       },
 

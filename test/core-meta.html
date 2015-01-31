@@ -179,6 +179,14 @@ suite('<core-meta>', function () {
       metaPairs = fixture('ClashingMetas');
     });
 
+    teardown(function () {
+      metaPairs.forEach(function (metaPair) {
+        metaPair.forEach(function (meta) {
+          meta.unregisterSelf();
+        });
+      });
+    });
+
     test('let the last value win registration against the key', function () {
       metaPairs.forEach(function (metaPair) {
         var registeredValue = metaPair[0].byKey(metaPair[0].key);

@@ -47,6 +47,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </simple-fixture>
 
+  <simple-fixture id="ClashingMetas">
+    <template>
+      <core-meta id="foo"></core-meta>
+      <core-meta id="foo"></core-meta>
+    </template>
+    <template>
+      <core-meta id="bar"></core-meta>
+      <core-meta key="bar"></core-meta>
+    </template>
+    <template>
+      <core-meta key="baz"></core-meta>
+      <core-meta key="baz"></core-meta>
+    </template>
+  </simple-fixture>
+
   <script>
 suite('<core-meta>', function () {
   suite('basic behavior', function () {
@@ -154,6 +169,25 @@ suite('<core-meta>', function () {
         expect(meta.list.length).to.be.equal(1);
         expect(meta.list[0]).to.be.equal(meta.value);
       })
+    });
+  });
+
+  suite('metas with clashing keys', function () {
+    var metaPairs;
+
+    setup(function () {
+      metaPairs = fixture('ClashingMetas');
+    });
+
+    test('let the last value win registration against the key', function () {
+      metaPairs.forEach(function (metaPair) {
+        var registeredValue = metaPair[0].byKey(metaPair[0].key);
+        var firstValue = metaPair[0].value;
+        var secondValue = metaPair[1].value;
+
+        expect(registeredValue).to.not.be.equal(firstValue);
+        expect(registeredValue).to.be.equal(secondValue);
+      });
     });
   });
 });

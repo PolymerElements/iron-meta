@@ -27,15 +27,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <simple-fixture id="TrivialMeta">
     <template>
-      <core-meta id="info"></core-meta>
+      <core-meta key="info"></core-meta>
     </template>
   </simple-fixture>
 
   <simple-fixture id="ManyMetas">
     <template>
-      <core-meta id="default1"></core-meta>
-      <core-meta id="default2"></core-meta>
-      <core-meta id="default3"></core-meta>
+      <core-meta key="default1"></core-meta>
+      <core-meta key="default2"></core-meta>
+      <core-meta key="default3"></core-meta>
     </template>
   </simple-fixture>
 
@@ -48,14 +48,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </simple-fixture>
 
   <simple-fixture id="ClashingMetas">
-    <template>
-      <core-meta id="foo"></core-meta>
-      <core-meta id="foo"></core-meta>
-    </template>
-    <template>
-      <core-meta id="bar"></core-meta>
-      <core-meta key="bar"></core-meta>
-    </template>
     <template>
       <core-meta key="baz"></core-meta>
       <core-meta key="baz"></core-meta>
@@ -79,10 +71,6 @@ suite('<core-meta>', function () {
       expect(meta.value).to.be.equal(meta);
     });
 
-    test('will use id as its key by default', function () {
-      expect(meta.key).to.be.equal(meta.id);
-    });
-
     test('can be assigned alternative values', function () {
       meta.value = 'foobar';
 
@@ -91,10 +79,6 @@ suite('<core-meta>', function () {
 
     test('can access same-type meta values by key', function () {
       expect(meta.byKey(meta.key)).to.be.equal(meta.value);
-    });
-
-    test('can by looked up "byId" as an alias for "byKey"', function () {
-      expect(meta.byId('meta')).to.be.equal(meta.byKey('meta'));
     });
 
     test('yields a list of same-type meta data', function () {
@@ -173,29 +157,25 @@ suite('<core-meta>', function () {
   });
 
   suite('metas with clashing keys', function () {
-    var metaPairs;
+    var metaPair;
 
     setup(function () {
-      metaPairs = fixture('ClashingMetas');
+      metaPair = fixture('ClashingMetas');
     });
 
     teardown(function () {
-      metaPairs.forEach(function (metaPair) {
-        metaPair.forEach(function (meta) {
-          meta.unregisterSelf();
-        });
+      metaPair.forEach(function (meta) {
+        meta.unregisterSelf();
       });
     });
 
     test('let the last value win registration against the key', function () {
-      metaPairs.forEach(function (metaPair) {
-        var registeredValue = metaPair[0].byKey(metaPair[0].key);
-        var firstValue = metaPair[0].value;
-        var secondValue = metaPair[1].value;
+      var registeredValue = metaPair[0].byKey(metaPair[0].key);
+      var firstValue = metaPair[0].value;
+      var secondValue = metaPair[1].value;
 
-        expect(registeredValue).to.not.be.equal(firstValue);
-        expect(registeredValue).to.be.equal(secondValue);
-      });
+      expect(registeredValue).to.not.be.equal(firstValue);
+      expect(registeredValue).to.be.equal(secondValue);
     });
   });
 });

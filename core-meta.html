@@ -28,19 +28,19 @@ Note that keyUrl="foo/bar" is the metadata I've defined. I could define more
 attributes or use child nodes to define additional metadata.
 
 Now I can access that element (and it's metadata) from any core-meta instance
-via the myId method, e.g.
+via the byKey method, e.g.
 
-    meta.byId('info').getAttribute('keyUrl').
+    meta.byKey('info').getAttribute('keyUrl').
 
 Pure imperative form would be like:
 
-    document.createElement('core-meta').byId('info').getAttribute('keyUrl');
+    document.createElement('core-meta').byKey('info').getAttribute('keyUrl');
 
 Or, in a Polymer element, you can include a meta in your template:
 
     <core-meta id="meta"></core-meta>
     ...
-    this.$.meta.byId('info').getAttribute('keyUrl');
+    this.$.meta.byKey('info').getAttribute('keyUrl');
 
 @group Polymer Core Elements
 @element core-meta
@@ -52,7 +52,7 @@ Or, in a Polymer element, you can include a meta in your template:
 
   (function() {
 
-    var SKIP_ID = 'meta';
+    var SKIP_KEY = 'meta';
     var metaData = {}, metaArray = {};
 
     Polymer({
@@ -82,11 +82,10 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * The key used to store the `value` under the `type` namespace.
-         * Defaults to the `id` value.
          *
          * @attribute key
          * @type String
-         * @default this.id
+         * @default ''
          */
         key: String
       },
@@ -99,7 +98,7 @@ Or, in a Polymer element, you can include a meta in your template:
       configure: function () {
         return {
           type: 'default',
-          key: this.id,
+          key: '',
           value: this
         };
       },
@@ -143,7 +142,7 @@ Or, in a Polymer element, you can include a meta in your template:
 
       registerSelf: function() {
         var key = this.key;
-        if (key !== '' && key !== SKIP_ID) {
+        if (key !== '' && key !== SKIP_KEY) {
           this.metaData[key] = this.value;
           this.metaArray.push(this.value);
         }
@@ -177,24 +176,12 @@ Or, in a Polymer element, you can include a meta in your template:
        * Retrieves meta data value by key.
        *
        * @method byKey
-       * @param {String} key The id of the meta-data to be returned.
+       * @param {String} key The key of the meta-data to be returned.
        * @returns *
        */
       byKey: function(key) {
         return this.metaData[key];
-      },
-
-      /**
-       * Retrieves meta data value by id, alias for byKey.
-       *
-       * @method byId
-       * @param {String} id The id of the meta-data to be returned.
-       * @returns *
-       */
-      byId: function(id) {
-        return this.byKey(id);
       }
-
     });
 
   })();

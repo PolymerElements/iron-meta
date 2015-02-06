@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     is: 'x-test',
 
     ready: function() {
-      this.textContent = this.$.meta.byId('info').getAttribute('keyUrl');
+      this.textContent = this.$.meta.byKey('info').getAttribute('keyUrl');
     }
 
   });
@@ -40,7 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
 
     <!-- this element provides the actual data and can be anywhere -->
-    <core-meta id="info" keyUrl="foo/bar"></core-meta>
+    <core-meta key="info" keyUrl="foo/bar"></core-meta>
     <x-test></x-test>
 
   </template>

@@ -17,42 +17,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../simple-fixture/simple-fixture-mocha.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
   <link rel="import" href="../core-meta.html">
-  <link rel="import" href="../../simple-fixture/simple-fixture.html">
+  <link rel="import" href="../../test-fixture/test-fixture.html">
 
 </head>
 <body>
 
-  <simple-fixture id="TrivialMeta">
+  <test-fixture id="TrivialMeta">
     <template>
       <core-meta key="info"></core-meta>
     </template>
-  </simple-fixture>
+  </test-fixture>
 
-  <simple-fixture id="ManyMetas">
+  <test-fixture id="ManyMetas">
     <template>
       <core-meta key="default1"></core-meta>
       <core-meta key="default2"></core-meta>
       <core-meta key="default3"></core-meta>
     </template>
-  </simple-fixture>
+  </test-fixture>
 
-  <simple-fixture id="DifferentTypedMetas">
+  <test-fixture id="DifferentTypedMetas">
     <template>
       <core-meta type="foo" key="foobarKey"></core-meta>
       <core-meta type="bar" key="foobarKey"></core-meta>
       <core-meta key="defaultKey"></core-meta>
     </template>
-  </simple-fixture>
+  </test-fixture>
 
-  <simple-fixture id="ClashingMetas">
+  <test-fixture id="ClashingMetas">
     <template>
       <core-meta key="baz"></core-meta>
       <core-meta key="baz"></core-meta>
     </template>
-  </simple-fixture>
+  </test-fixture>
 
   <script>
 suite('<core-meta>', function () {

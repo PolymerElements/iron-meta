@@ -23,15 +23,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
-  <core-meta id="info" value="foo/bar"></core-meta>
+  <core-meta key="info" value="foo/bar"></core-meta>
 
   <script>
 
     suite('basic', function() {
 
-      test('byId', function() {
+      test('byKey', function() {
         var meta = document.createElement('core-meta');
-        assert.equal(meta.byId('info'), 'foo/bar');
+        assert.equal(meta.byKey('info'), 'foo/bar');
       });
 
       test('list', function() {

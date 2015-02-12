@@ -14,6 +14,6 @@
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^1.1.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#master",
-    "simple-fixture": "simple-elements/simple-fixture"
+    "test-fixture": "polymer/test-fixture#master"
   }
 }

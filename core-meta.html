@@ -56,10 +56,9 @@ Or, in a Polymer element, you can include a meta in your template:
     var metaData = {}, metaArray = {};
 
     Polymer({
-
       is: 'core-meta',
 
-      published: {
+      properties: {
         /**
          * The type of meta-data.  All meta-data with the same type with be
          * stored together.
@@ -68,7 +67,24 @@ Or, in a Polymer element, you can include a meta in your template:
          * @type String
          * @default 'default'
          */
-        type: String,
+        type: {
+          type: String,
+          value: 'default'
+        },
+
+        /**
+         * The key used to store the `value` under the `type` namespace.
+         *
+         * @attribute key
+         * @type String
+         * @default ''
+         */
+        key: {
+          type: String,
+          value: '',
+          notify: true,
+          observer: 'keyChanged'
+        },
 
         /**
          * The value of the meta-data to store. If no value is specified, the
@@ -78,29 +94,14 @@ Or, in a Polymer element, you can include a meta in your template:
          * @type *
          * @default this
          */
-        value: String,
-
-        /**
-         * The key used to store the `value` under the `type` namespace.
-         *
-         * @attribute key
-         * @type String
-         * @default ''
-         */
-        key: String
-      },
-
-      bind: {
-        value: 'valueChanged',
-        key: 'keyChanged'
-      },
-
-      configure: function () {
-        return {
-          type: 'default',
-          key: '',
-          value: this
-        };
+        value: {
+          type: String,
+          value: function () {
+            return this;
+          },
+          notify: true,
+          observer: 'valueChanged'
+        }
       },
 
       ready: function() {
@@ -129,6 +130,27 @@ Or, in a Polymer element, you can include a meta in your template:
           metaData[t] = {};
         }
         return metaData[t];
+      },
+
+      /**
+       * Returns a list of all meta-data values within the same type.
+       *
+       * @property list
+       * @type Array
+       */
+      get list() {
+        return this.metaArray;
+      },
+
+      /**
+       * Retrieves meta data value by key.
+       *
+       * @method byKey
+       * @param {String} key The key of the meta-data to be returned.
+       * @returns *
+       */
+      byKey: function(key) {
+        return this.metaData[key];
       },
 
       resetRegistration: function (oldKey, oldValue) {
@@ -160,27 +182,6 @@ Or, in a Polymer element, you can include a meta in your template:
         if (index >= 0) {
           this.metaArray.splice(index, 1);
         }
-      },
-
-      /**
-       * Returns a list of all meta-data values within the same type.
-       *
-       * @property list
-       * @type Array
-       */
-      get list() {
-        return this.metaArray;
-      },
-
-      /**
-       * Retrieves meta data value by key.
-       *
-       * @method byKey
-       * @param {String} key The key of the meta-data to be returned.
-       * @returns *
-       */
-      byKey: function(key) {
-        return this.metaData[key];
       }
     });
 

@@ -1,0 +1,248 @@
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`iron-meta` is a generic element you can use for sharing information across the DOM tree.
+It uses [monostate pattern](http://c2.com/cgi/wiki?MonostatePattern) such that any
+instance of iron-meta has access to the shared
+information. You can use `iron-meta` to share whatever you want (or create an extension
+[like x-meta] for enhancements).
+
+The `iron-meta` instances containing your actual data can be loaded in an import,
+or constructed in any way you see fit. The only requirement is that you create them
+before you try to access them.
+
+Examples:
+
+If I create an instance like this:
+
+    <iron-meta key="info" keyUrl="foo/bar"></iron-meta>
+
+Note that keyUrl="foo/bar" is the metadata I've defined. I could define more
+attributes or use child nodes to define additional metadata.
+
+Now I can access that element (and it's metadata) from any iron-meta instance
+via the byKey method, e.g.
+
+    meta.byKey('info').getAttribute('keyUrl').
+
+Pure imperative form would be like:
+
+    document.createElement('iron-meta').byKey('info').getAttribute('keyUrl');
+
+Or, in a Polymer element, you can include a meta in your template:
+
+    <iron-meta id="meta"></iron-meta>
+    ...
+    this.$.meta.byKey('info').getAttribute('keyUrl');
+
+@group Polymer Iron Elements
+@element iron-meta
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+
+  (function() {
+
+    // monostate data
+    var metaDatas = {};
+    var metaArrays = {};
+
+    Polymer.IronMeta = Polymer({
+
+      is: 'iron-meta',
+
+      properties: {
+
+        /**
+         * The type of meta-data.  All meta-data with the same type with be
+         * stored together.
+         *
+         * @attribute type
+         * @type String
+         * @default 'default'
+         */
+        type: {
+          type: String,
+          value: 'default',
+          observer: '_typeChanged'
+        },
+
+        /**
+         * The key used to store the `value` under the `type` namespace.
+         *
+         * @attribute key
+         * @type String
+         * @default ''
+         */
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+
+        /**
+         * Specifies a key to us to retrieve `value` from the `type` namespace,
+         * use only one of `query` or `key`.
+         *
+         * @attribute query
+         * @type String
+         */
+        query: {
+          type: String,
+          observer: '_queryChanged'
+        },
+
+        /**
+         * The value of the meta-data to store. If no value is specified, the
+         * value defaults to a self reference (`this`).
+         *
+         * @attribute value
+         * @type *
+         * @default this
+         */
+        value: {
+          type: Object,
+          notify: true,
+          observer: '_valueChanged'
+        },
+
+        /**
+         * Array of all values for the given type.
+         *
+         * @property list
+         * @type Array
+         */
+        list: {
+          type: Array,
+          notify: true
+        },
+
+        _metaData: {
+          type: Object
+        }
+
+      },
+
+      /**
+       * Actually a factory method, not a true constructor. Only runs if
+       * someone invokes it directly (via `new Polymer.IronMeta()`);
+       */
+      constructor: function(config) {
+        if (config) {
+          for (var n in config) {
+            switch(n) {
+              case 'type':
+              case 'key':
+              case 'value':
+              case 'query':
+                this[n] = config[n];
+                break;
+            }
+          }
+        }
+      },
+
+      created: function() {
+        // TODO(sjmiles): good for debugging?
+        /*
+        this._metaDatas = metaDatas;
+        this._metaArrays = metaArrays;
+        */
+      },
+
+      _keyChanged: function(key, old) {
+        this._resetRegistration(old);
+      },
+
+      _valueChanged: function(value) {
+        if (this.value === '*self') {
+          this.value = this;
+        } else {
+          this._resetRegistration(this.key);
+        }
+      },
+
+      _queryChanged: function(query, old) {
+        this.value = this._metaData[query];
+      },
+
+      _typeChanged: function(type) {
+        this._unregister(this.key);
+        if (!metaDatas[type]) {
+          metaDatas[type] = {};
+        }
+        this._metaData = metaDatas[type];
+        if (!metaArrays[type]) {
+          metaArrays[type] = [];
+        }
+        this.list = metaArrays[type];
+        this._register(this.key, this.value);
+      },
+
+      // TODO(sjmiles): can restore this style if single-dependency
+      // computed values are made synchronous, otherwise there are timing
+      // difficulties
+/*
+      _computeMetaData: function(type) {
+        if (!metaDatas[type]) {
+          metaDatas[type] = {};
+        }
+        return metaDatas[type];
+      },
+
+      _computeList: function(type) {
+        if (!metaArrays[type]) {
+          metaArrays[type] = [];
+        }
+        return metaArrays[type];
+      },
+*/
+
+      /**
+       * Retrieves meta data value by key.
+       *
+       * @method byKey
+       * @param {String} key The key of the meta-data to be returned.
+       * @returns *
+       */
+      byKey: function(key) {
+        return this._metaData && this._metaData[key];
+      },
+
+      _resetRegistration: function(oldKey) {
+        this._unregister(oldKey);
+        this._register(this.key, this.value);
+      },
+
+      _unregisterSelf: function() {
+        this._unregister(this.key);
+      },
+
+      _register: function(key, value) {
+        if (this._metaData && key && value) {
+          this._metaData[key] = value;
+          this.list.push(value);
+        }
+      },
+
+      _unregister: function(key) {
+        if (this._metaData && key && (key in this._metaData)) {
+          var value = this._metaData[key];
+          this.arrayDelete(this.list, value);
+          delete this._metaData[key];
+        }
+      }
+
+    });
+
+  })();
+
+</script>

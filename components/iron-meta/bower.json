@@ -1,0 +1,20 @@
+{
+  "name": "iron-meta",
+  "version": "0.8.0",
+  "private": true,
+  "main": "iron-meta.html",
+  "authors": [
+    "Frankie Fu <ffu@google.com>",
+    "Scott Miles <sjmiles@google.com>",
+    "The Polymer Authors"
+  ],
+  "repository": "https://github.com/PolymerElements/iron-meta/tree/master",
+  "dependencies": {
+    "polymer": "Polymer/polymer#0.8-preview"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#master",
+    "test-fixture": "polymer/test-fixture#master",
+    "web-component-tester": "~2.2.6"
+  }
+}

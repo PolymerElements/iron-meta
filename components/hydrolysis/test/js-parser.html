@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../core-asset/core-asset.html">
+
+
+  <script src="../hydrolysis.js"></script>
+</head>
+<body>
+  <core-asset id="parseerror" href="static/js-parse-error.js"></core-asset>
+  <core-asset id="modules" href="static/js-modules.js"></core-asset>
+  <core-asset id="elements" href="static/js-elements.js"></core-asset>
+  <script>
+    var hyd = require('hydrolysis');
+    var pe = document.querySelector("#parseerror");
+    var mod = document.querySelector("#modules");
+    var ele = document.querySelector("#elements");
+
+    suite('parser throws errors', function() {
+      /* Two js documents, one with an error and one with a module declaration. */
+      var parseError;
+      setup(function(done) {
+        if (!pe.loaded) {
+          pe.addEventListener('content-loaded', function() {
+            parseError = pe.content;
+            done();
+          });
+        } else {
+          parseError = pe.content;
+          done();
+        }
+      });
+
+      test('js syntax error', function() {
+        try {
+          hyd._jsParse(parseError);
+        } catch (err) {
+          assert.equal(err.lineNumber, 18);
+          assert.equal(err.column, 34);
+        }
+      });
+    });
+
+    suite('module metadata', function(){
+      var parsed;
+      setup(function(done) {
+        if (mod.loaded) {
+          parsed = hyd._jsParse(mod.content);
+          console.log("modmetadata")
+          done();
+        } else {
+          mod.addEventListener('content-loaded', function() {
+            parsed = hyd._jsParse(mod.content);
+            console.log("loaded");
+            done();
+          });
+        }
+      });
+
+      test('Find all modulate calls', function() {
+        console.log(parsed);
+        assert.equal(parsed.modules.length, 2);
+      });
+
+      test('Find all modulate dependencies', function() {
+        var foundDeps = false;
+        for (var i = 0; i < parsed.modules.length; i++) {
+          var module = parsed.modules[i];
+          if (module.is == "x-resizer") {
+            console.log(module);
+            assert.equal(module.deps.length, 2);
+            foundDeps = true;
+          }
+        }
+        assert(foundDeps);
+      });
+
+      test('Find all modulate properties', function() {
+        var foundProps = false;
+        for (var i = 0; i < parsed.modules.length; i++) {
+          var module = parsed.modules[i];
+          if (module.is == "x-resizable") {
+            assert.equal(module.properties.length, 3);
+            assert.equal(module.properties[0].name, "resizableAttached");
+            foundProps = true;
+          }
+        }
+        assert(foundProps);
+      });
+
+      test('Find module parents', function() {
+        var foundParent = false;
+        for (var i = 0; i < parsed.modules.length; i++) {
+          var module = parsed.modules[i];
+          if (module.is == "x-resizer") {
+            assert.equal(module.extends, "x-resizable");
+            foundParent = true;
+          }
+        }
+        assert(foundParent);
+      });
+    });
+
+    suite('element metadata', function(){
+      var parsed;
+      setup(function(done) {
+        if (!ele.loaded) {
+          ele.addEventListener('content-loaded', function() {
+            parsed = hyd._jsParse(ele.content);
+            done();
+          });
+        } else {
+          parsed = hyd._jsParse(ele.content);
+          done();
+        }
+      });
+
+      test('Find all Polymer calls', function() {
+        assert.equal(parsed.elements.length, 2);
+      });
+
+      test('Polymer elements are named', function() {
+        assert.equal(parsed.elements[0].is, 'test-element');
+        assert.equal(parsed.elements[1].is, 'x-firebase');
+      });
+
+      test('Find all published properties', function() {
+        var foundProps = false;
+        for (var i = 0; i < parsed.elements.length; i++) {
+          var element = parsed.elements[i];
+          if (element.is == "test-element") {
+            console.log(element);
+            var published = 0;
+            for (var j = 0; j < element.properties.length; j++) {
+              if (element.properties[j].published) {
+                published++;
+              }
+            }
+            if (published == 6) {
+              foundProps = true;
+            }
+          }
+        }
+        assert(foundProps);
+      });
+
+      test('Published properties have notify values', function() {
+        var foundNotify = false;
+        for (var i = 0; i < parsed.elements.length; i++) {
+          var element = parsed.elements[i];
+          if (element.is == "test-element") {
+            console.log(element);
+            var published = 0;
+            for (var j = 0; j < element.properties.length; j++) {
+              if (element.properties[j].name == "objectNotify") {
+                foundNotify = true;
+              }
+            }
+          }
+        }
+        assert(foundNotify);
+      });
+
+      test('Find all methods', function() {
+        var foundMethods = false;
+        for (var i = 0; i < parsed.elements.length; i++) {
+          var element = parsed.elements[i];
+          if (element.is == "x-firebase") {
+            console.log(element);
+            var methods = 0;
+            for (var j = 0; j < element.properties.length; j++) {
+              if (element.properties[j].type == "Function") {
+                methods++;
+              }
+            }
+            if (methods == 31) {
+              foundMethods = true;
+            }
+          }
+        }
+        assert(foundMethods);
+      });
+
+
+    });
+  </script>
+</body>
+</html>

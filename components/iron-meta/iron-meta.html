@@ -63,8 +63,8 @@ Or, in a Polymer element, you can include a meta in your template:
       properties: {
 
         /**
-         * The type of meta-data.  All meta-data with the same type with be
-         * stored together.
+         * The type of meta-data.  All meta-data of the same type is stored
+         * together.
          *
          * @attribute type
          * @type String
@@ -77,7 +77,7 @@ Or, in a Polymer element, you can include a meta in your template:
         },
 
         /**
-         * The key used to store the `value` under the `type` namespace.
+         * The key used to store `value` under the `type` namespace.
          *
          * @attribute key
          * @type String
@@ -89,8 +89,8 @@ Or, in a Polymer element, you can include a meta in your template:
         },
 
         /**
-         * Specifies a key to us to retrieve `value` from the `type` namespace,
-         * use only one of `query` or `key`.
+         * Specifies a key to use for retrieving `value` from the `type`
+         * namespace, use only one of `query` or `key`.
          *
          * @attribute query
          * @type String
@@ -101,8 +101,7 @@ Or, in a Polymer element, you can include a meta in your template:
         },
 
         /**
-         * The value of the meta-data to store. If no value is specified, the
-         * value defaults to a self reference (`this`).
+         * The meta-data to store or retrieve.
          *
          * @attribute value
          * @type *
@@ -115,7 +114,19 @@ Or, in a Polymer element, you can include a meta in your template:
         },
 
         /**
-         * Array of all values for the given type.
+         * If true, `value` is set to the iron-meta instance itself.
+         *
+         * @attribute self
+         * @type Boolean
+         * @default false
+         */
+         self: {
+          type: Boolean,
+          observer: '_selfChanged'
+        },
+
+        /**
+         * Array of all meta-data values for the given type.
          *
          * @property list
          * @type Array
@@ -152,10 +163,8 @@ Or, in a Polymer element, you can include a meta in your template:
 
       created: function() {
         // TODO(sjmiles): good for debugging?
-        /*
         this._metaDatas = metaDatas;
         this._metaArrays = metaArrays;
-        */
       },
 
       _keyChanged: function(key, old) {
@@ -163,19 +172,21 @@ Or, in a Polymer element, you can include a meta in your template:
       },
 
       _valueChanged: function(value) {
-        if (this.value === '*self') {
+        this._resetRegistration(this.key);
+      },
+
+      _selfChanged: function(self) {
+        if (self) {
           this.value = this;
-        } else {
-          this._resetRegistration(this.key);
         }
       },
 
       _queryChanged: function(query, old) {
-        this.value = this._metaData[query];
+        this.value = this._metaData && this._metaData[query];
       },
 
       _typeChanged: function(type) {
-        this._unregister(this.key);
+        this._unregisterKey(this.key);
         if (!metaDatas[type]) {
           metaDatas[type] = {};
         }
@@ -184,13 +195,16 @@ Or, in a Polymer element, you can include a meta in your template:
           metaArrays[type] = [];
         }
         this.list = metaArrays[type];
-        this._register(this.key, this.value);
+        this._registerKeyValue(this.key, this.value);
+        if (this.query) {
+          this._queryChanged(this.query);
+        }
       },
 
-      // TODO(sjmiles): can restore this style if single-dependency
+      // TODO(sjmiles): can restore computed idiom if single-dependency
       // computed values are made synchronous, otherwise there are timing
       // difficulties
-/*
+        /*
       _computeMetaData: function(type) {
         if (!metaDatas[type]) {
           metaDatas[type] = {};
@@ -204,7 +218,7 @@ Or, in a Polymer element, you can include a meta in your template:
         }
         return metaArrays[type];
       },
-*/
+      */
 
       /**
        * Retrieves meta data value by key.
@@ -218,26 +232,32 @@ Or, in a Polymer element, you can include a meta in your template:
       },
 
       _resetRegistration: function(oldKey) {
-        this._unregister(oldKey);
-        this._register(this.key, this.value);
+        this._unregisterKey(oldKey);
+        this._registerKeyValue(this.key, this.value);
       },
 
-      _unregisterSelf: function() {
-        this._unregister(this.key);
+      _unregisterKey: function(key) {
+        this._unregister(key, this._metaData, this.list);
       },
 
-      _register: function(key, value) {
-        if (this._metaData && key && value) {
-          this._metaData[key] = value;
-          this.list.push(value);
+      _registerKeyValue: function(key, value) {
+        this._register(key, value, this._metaData, this.list);
+      },
+
+      _register: function(key, value, data, list) {
+        if (key && data && value !== undefined) {
+          data[key] = value;
+          list.push(value);
         }
       },
 
-      _unregister: function(key) {
-        if (this._metaData && key && (key in this._metaData)) {
-          var value = this._metaData[key];
-          this.arrayDelete(this.list, value);
-          delete this._metaData[key];
+      _unregister: function(key, data, list) {
+        if (key && data) {
+          if (key in data) {
+            var value = data[key];
+            delete data[key];
+            this.arrayDelete(list, value);
+          }
         }
       }
 

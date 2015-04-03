@@ -1,0 +1,75 @@
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="marked-import.html">
+
+<!--
+Element wrapper for the `marked` (http://marked.org/) library.
+
+@class marked-element
+@blurb Element wrapper for the marked library.
+-->
+<dom-module id="marked-element">
+
+  <template>
+    <div id="content"></div>
+  </template>
+
+</dom-module>
+
+<script>
+
+  'use strict';
+
+  Polymer({
+
+    is: 'marked-element',
+
+    properties: {
+
+      markdown: {
+        type: String,
+        observer: 'markdownChanged',
+        value: ''
+      }
+
+    },
+
+    hostAttributes: {
+      type: 'text/markdown'
+    },
+
+    ready: function() {
+      // `marked` library is available at this global
+      marked.setOptions({
+        highlight: this.highlight.bind(this)
+      });
+      if (!this.markdown) {
+        // Use the Markdown from the first `<script>` descendant whose MIME type starts with
+        // "text/markdown". Script elements beyond the first are ignored.
+        var markdownElement = Polymer.dom(this).querySelector('[type^="text/markdown"]');
+        if (markdownElement != null) {
+          this.markdown = markdownElement.innerHTML;
+        }
+      }
+    },
+
+    markdownChanged: function (markdown) {
+      this.$.content.innerHTML = markdown ? marked(markdown) : '';
+    },
+
+    highlight: function(code, lang) {
+      var event = this.fire('marked-js-highlight', {code: code, lang: lang});
+      return event.detail.code || code;
+    }
+
+  });
+
+</script>

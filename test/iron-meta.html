@@ -9,53 +9,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <html>
-<head>
+  <head>
 
-  <title>core-meta</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iron-meta</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-  <link rel="import" href="../core-meta.html">
-  <link rel="import" href="../../test-fixture/test-fixture.html">
+    <link rel="import" href="../iron-meta.html">
+    <link rel="import" href="../../test-fixture/test-fixture.html">
 
-</head>
-<body>
+  </head>
+  <body>
 
-  <test-fixture id="TrivialMeta">
-    <template>
-      <core-meta key="info"></core-meta>
-    </template>
-  </test-fixture>
+    <test-fixture id="TrivialMeta">
+      <template>
+        <iron-meta self key="info"></iron-meta>
+      </template>
+    </test-fixture>
 
-  <test-fixture id="ManyMetas">
-    <template>
-      <core-meta key="default1"></core-meta>
-      <core-meta key="default2"></core-meta>
-      <core-meta key="default3"></core-meta>
-    </template>
-  </test-fixture>
+    <test-fixture id="ManyMetas">
+      <template>
+        <iron-meta self key="default1"></iron-meta>
+        <iron-meta self key="default2"></iron-meta>
+        <iron-meta self key="default3"></iron-meta>
+      </template>
+    </test-fixture>
 
-  <test-fixture id="DifferentTypedMetas">
-    <template>
-      <core-meta type="foo" key="foobarKey"></core-meta>
-      <core-meta type="bar" key="foobarKey"></core-meta>
-      <core-meta key="defaultKey"></core-meta>
-    </template>
-  </test-fixture>
+    <test-fixture id="DifferentTypedMetas">
+      <template>
+        <iron-meta self type="foo" key="foobarKey"></iron-meta>
+        <iron-meta self type="bar" key="foobarKey"></iron-meta>
+        <iron-meta self key="defaultKey"></iron-meta>
+      </template>
+    </test-fixture>
 
-  <test-fixture id="ClashingMetas">
-    <template>
-      <core-meta key="baz"></core-meta>
-      <core-meta key="baz"></core-meta>
-    </template>
-  </test-fixture>
+    <test-fixture id="ClashingMetas">
+      <template>
+        <iron-meta self key="baz"></iron-meta>
+        <iron-meta self key="baz"></iron-meta>
+      </template>
+    </test-fixture>
 
-  <script>
-suite('<core-meta>', function () {
+    <script>
+suite('<iron-meta>', function () {
   suite('basic behavior', function () {
     var meta;
 
@@ -64,7 +64,7 @@ suite('<core-meta>', function () {
     });
 
     teardown(function () {
-      meta.unregisterSelf();
+      meta.key = null;
     });
 
     test('uses itself as the default value', function () {
@@ -97,7 +97,7 @@ suite('<core-meta>', function () {
 
     teardown(function () {
       metas.forEach(function (meta) {
-        meta.unregisterSelf();
+        meta.key = null;
       });
     });
 
@@ -109,7 +109,7 @@ suite('<core-meta>', function () {
     });
 
     test('can be unregistered individually', function () {
-      metas[0].unregisterSelf();
+      metas[0].key = null;
 
       expect(metas[0].list.length).to.be.equal(2);
       expect(metas[0].list).to.be.deep.equal([metas[1], metas[2]])
@@ -129,7 +129,7 @@ suite('<core-meta>', function () {
 
     teardown(function () {
       metas.forEach(function (meta) {
-        meta.unregisterSelf();
+        meta.key = null;
       });
     });
 
@@ -165,7 +165,7 @@ suite('<core-meta>', function () {
 
     teardown(function () {
       metaPair.forEach(function (meta) {
-        meta.unregisterSelf();
+        meta.key = null;
       });
     });
 
@@ -179,7 +179,7 @@ suite('<core-meta>', function () {
     });
   });
 });
-  </script>
+    </script>
 
-</body>
+  </body>
 </html>

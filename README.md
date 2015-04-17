@@ -1,4 +1,4 @@
-core-meta
+iron-meta
 =========
 
-See the [component page](http://polymer-project.org/docs/elements/core-elements.html#core-meta) for more information.
+See the [component page](http://polymerelements.github.io/iron-meta) for more information.

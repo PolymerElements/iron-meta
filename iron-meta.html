@@ -89,18 +89,6 @@ Or, in a Polymer element, you can include a meta in your template:
         },
 
         /**
-         * Specifies a key to use for retrieving `value` from the `type`
-         * namespace, use only one of `query` or `key`.
-         *
-         * @attribute query
-         * @type String
-         */
-        query: {
-          type: String,
-          observer: '_queryChanged'
-        },
-
-        /**
          * The meta-data to store or retrieve.
          *
          * @attribute value
@@ -134,10 +122,6 @@ Or, in a Polymer element, you can include a meta in your template:
         list: {
           type: Array,
           notify: true
-        },
-
-        _metaData: {
-          type: Object
         }
 
       },
@@ -153,7 +137,6 @@ Or, in a Polymer element, you can include a meta in your template:
               case 'type':
               case 'key':
               case 'value':
-              case 'query':
                 this[n] = config[n];
                 break;
             }
@@ -181,10 +164,6 @@ Or, in a Polymer element, you can include a meta in your template:
         }
       },
 
-      _queryChanged: function(query) {
-        this.value = this._metaData && this._metaData[query];
-      },
-
       _typeChanged: function(type) {
         this._unregisterKey(this.key);
         if (!metaDatas[type]) {
@@ -196,29 +175,7 @@ Or, in a Polymer element, you can include a meta in your template:
         }
         this.list = metaArrays[type];
         this._registerKeyValue(this.key, this.value);
-        if (this.query) {
-          this._queryChanged(this.query);
-        }
       },
-
-      // TODO(sjmiles): can restore computed idiom if single-dependency
-      // computed values are made synchronous, otherwise there are timing
-      // difficulties
-      /*
-      _computeMetaData: function(type) {
-        if (!metaDatas[type]) {
-          metaDatas[type] = {};
-        }
-        return metaDatas[type];
-      },
-
-      _computeList: function(type) {
-        if (!metaArrays[type]) {
-          metaArrays[type] = [];
-        }
-        return metaArrays[type];
-      },
-      */
 
       /**
        * Retrieves meta data value by key.
@@ -259,6 +216,131 @@ Or, in a Polymer element, you can include a meta in your template:
             this.arrayDelete(list, value);
           }
         }
+      }
+
+    });
+
+    /**
+    `iron-meta-query` can be used to access infomation stored in `iron-meta`.
+
+    Examples:
+
+    If I create an instance like this:
+
+        <iron-meta key="info" value="foo/bar"></iron-meta>
+
+    Note that keyUrl="foo/bar" is the metadata I've defined. I could define more
+    attributes or use child nodes to define additional metadata.
+
+    Now I can access that element (and it's metadata) from any `iron-meta-query` instance:
+
+         var value = new Polymer.IronMetaQuery({key: 'info'}).value;
+
+    @group Polymer Iron Elements
+    @element iron-meta-query
+    */
+    Polymer.IronMetaQuery = Polymer({
+
+      is: 'iron-meta-query',
+
+      properties: {
+
+        /**
+         * The type of meta-data.  All meta-data of the same type is stored
+         * together.
+         *
+         * @attribute type
+         * @type String
+         * @default 'default'
+         */
+        type: {
+          type: String,
+          value: 'default',
+          observer: '_typeChanged'
+        },
+
+        /**
+         * Specifies a key to use for retrieving `value` from the `type`
+         * namespace.
+         *
+         * @attribute key
+         * @type String
+         */
+        key: {
+          type: String,
+          observer: '_keyChanged'
+        },
+
+        /**
+         * The meta-data to store or retrieve.
+         *
+         * @attribute value
+         * @type *
+         * @default this
+         */
+        value: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * Array of all meta-data values for the given type.
+         *
+         * @property list
+         * @type Array
+         */
+        list: {
+          type: Array,
+          notify: true
+        }
+
+      },
+
+      /**
+       * Actually a factory method, not a true constructor. Only runs if
+       * someone invokes it directly (via `new Polymer.IronMeta()`);
+       */
+      constructor: function(config) {
+        if (config) {
+          for (var n in config) {
+            switch(n) {
+              case 'type':
+              case 'key':
+                this[n] = config[n];
+                break;
+            }
+          }
+        }
+      },
+
+      created: function() {
+        // TODO(sjmiles): good for debugging?
+        this._metaDatas = metaDatas;
+        this._metaArrays = metaArrays;
+      },
+
+      _keyChanged: function(key) {
+        this._setValue(this._metaData && this._metaData[key]);
+      },
+
+      _typeChanged: function(type) {
+        this._metaData = metaDatas[type];
+        this.list = metaArrays[type];
+        if (this.key) {
+          this._keyChanged(this.key);
+        }
+      },
+
+      /**
+       * Retrieves meta data value by key.
+       *
+       * @method byKey
+       * @param {String} key The key of the meta-data to be returned.
+       * @returns *
+       */
+      byKey: function(key) {
+        return this._metaData && this._metaData[key];
       }
 
     });

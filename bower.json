@@ -6,6 +6,10 @@
   "authors": [
     "The Polymer Authors"
   ],
+  "keywords": [
+    "web-components",
+    "polymer"
+  ],
   "dependencies": {
     "polymer": "Polymer/polymer#^0.9.0"
   },

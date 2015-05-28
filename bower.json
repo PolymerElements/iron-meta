@@ -1,6 +1,11 @@
 {
   "name": "iron-meta",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "meta"
+  ],
   "license": "http://polymer.github.io/LICENSE.txt",
   "description": "Useful for sharing information across a DOM tree",
   "private": true,

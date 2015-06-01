@@ -251,10 +251,6 @@ Or, in a Polymer element, you can include a meta in your template:
         /**
          * The type of meta-data.  All meta-data of the same type is stored
          * together.
-         *
-         * @attribute type
-         * @type String
-         * @default 'default'
          */
         type: {
           type: String,
@@ -265,9 +261,6 @@ Or, in a Polymer element, you can include a meta in your template:
         /**
          * Specifies a key to use for retrieving `value` from the `type`
          * namespace.
-         *
-         * @attribute key
-         * @type String
          */
         key: {
           type: String,
@@ -276,10 +269,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * The meta-data to store or retrieve.
-         *
-         * @attribute value
-         * @type *
-         * @default this
          */
         value: {
           type: Object,
@@ -289,9 +278,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * Array of all meta-data values for the given type.
-         *
-         * @property list
-         * @type Array
          */
         list: {
           type: Array,
@@ -304,7 +290,7 @@ Or, in a Polymer element, you can include a meta in your template:
        * Actually a factory method, not a true constructor. Only runs if
        * someone invokes it directly (via `new Polymer.IronMeta()`);
        */
-      constructor: function(config) {
+      factoryImpl: function(config) {
         if (config) {
           for (var n in config) {
             switch(n) {
@@ -337,10 +323,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
       /**
        * Retrieves meta data value by key.
-       *
-       * @method byKey
-       * @param {String} key The key of the meta-data to be returned.
-       * @returns *
        */
       byKey: function(key) {
         return this._metaData && this._metaData[key];

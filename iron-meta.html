@@ -68,10 +68,6 @@ Or, in a Polymer element, you can include a meta in your template:
         /**
          * The type of meta-data.  All meta-data of the same type is stored
          * together.
-         *
-         * @attribute type
-         * @type String
-         * @default 'default'
          */
         type: {
           type: String,
@@ -81,10 +77,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * The key used to store `value` under the `type` namespace.
-         *
-         * @attribute key
-         * @type String
-         * @default ''
          */
         key: {
           type: String,
@@ -93,10 +85,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * The meta-data to store or retrieve.
-         *
-         * @attribute value
-         * @type *
-         * @default this
          */
         value: {
           type: Object,
@@ -106,10 +94,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * If true, `value` is set to the iron-meta instance itself.
-         *
-         * @attribute self
-         * @type Boolean
-         * @default false
          */
          self: {
           type: Boolean,
@@ -118,9 +102,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
         /**
          * Array of all meta-data values for the given type.
-         *
-         * @property list
-         * @type Array
          */
         list: {
           type: Array,

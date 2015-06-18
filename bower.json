@@ -12,6 +12,10 @@
   "authors": [
     "The Polymer Authors"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-meta.git"
+  },
   "keywords": [
     "web-components",
     "polymer"

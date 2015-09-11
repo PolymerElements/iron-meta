@@ -56,24 +56,15 @@ Or, in a Polymer element, you can include a meta in your template:
   (function() {
 
     // monostate data
-    var metaDatas = {};
-    var metaArrays = {};
+    var metaData = {};
+    var metaArray = [];
+    var singleton = null;
 
     Polymer.IronMeta = Polymer({
 
       is: 'iron-meta',
 
       properties: {
-
-        /**
-         * The type of meta-data.  All meta-data of the same type is stored
-         * together.
-         */
-        type: {
-          type: String,
-          value: 'default',
-          observer: '_typeChanged'
-        },
 
         /**
          * The key used to store `value` under the `type` namespace.
@@ -105,7 +96,17 @@ Or, in a Polymer element, you can include a meta in your template:
          */
         list: {
           type: Array,
-          notify: true
+          notify: true,
+          value: function() {
+            return metaArray
+          }
+        },
+
+        _metaData: {
+          type: Object,
+          value: function() {
+            return metaData;
+          }
         }
 
       },
@@ -122,7 +123,6 @@ Or, in a Polymer element, you can include a meta in your template:
         if (config) {
           for (var n in config) {
             switch(n) {
-              case 'type':
               case 'key':
               case 'value':
                 this[n] = config[n];
@@ -130,12 +130,6 @@ Or, in a Polymer element, you can include a meta in your template:
             }
           }
         }
-      },
-
-      created: function() {
-        // TODO(sjmiles): good for debugging?
-        this._metaDatas = metaDatas;
-        this._metaArrays = metaArrays;
       },
 
       _keyChanged: function(key, old) {
@@ -150,19 +144,6 @@ Or, in a Polymer element, you can include a meta in your template:
         if (self) {
           this.value = this;
         }
-      },
-
-      _typeChanged: function(type) {
-        this._unregisterKey(this.key);
-        if (!metaDatas[type]) {
-          metaDatas[type] = {};
-        }
-        this._metaData = metaDatas[type];
-        if (!metaArrays[type]) {
-          metaArrays[type] = [];
-        }
-        this.list = metaArrays[type];
-        this._registerKeyValue(this.key, this.value);
       },
 
       /**
@@ -208,6 +189,13 @@ Or, in a Polymer element, you can include a meta in your template:
 
     });
 
+    Polymer.IronMeta.getIronMeta = function getIronMeta() {
+      if (singleton == null) {
+        singleton = new Polymer.IronMeta();
+      }
+      return singleton;
+    }
+
     /**
     `iron-meta-query` can be used to access infomation stored in `iron-meta`.
 
@@ -233,15 +221,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
       properties: {
 
-        /**
-         * The type of meta-data.  All meta-data of the same type is stored
-         * together.
-         */
-        type: {
-          type: String,
-          value: 'default',
-          observer: '_typeChanged'
-        },
 
         /**
          * Specifies a key to use for retrieving `value` from the `type`
@@ -267,6 +246,13 @@ Or, in a Polymer element, you can include a meta in your template:
         list: {
           type: Array,
           notify: true
+        },
+
+        _metaData: {
+          type: object,
+          value: function() {
+            return metaData;
+          }
         }
 
       },
@@ -279,7 +265,6 @@ Or, in a Polymer element, you can include a meta in your template:
         if (config) {
           for (var n in config) {
             switch(n) {
-              case 'type':
               case 'key':
                 this[n] = config[n];
                 break;
@@ -288,22 +273,8 @@ Or, in a Polymer element, you can include a meta in your template:
         }
       },
 
-      created: function() {
-        // TODO(sjmiles): good for debugging?
-        this._metaDatas = metaDatas;
-        this._metaArrays = metaArrays;
-      },
-
       _keyChanged: function(key) {
         this._setValue(this._metaData && this._metaData[key]);
-      },
-
-      _typeChanged: function(type) {
-        this._metaData = metaDatas[type];
-        this.list = metaArrays[type];
-        if (this.key) {
-          this._keyChanged(this.key);
-        }
       },
 
       /**

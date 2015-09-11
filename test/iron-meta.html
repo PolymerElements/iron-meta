@@ -40,14 +40,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
-    <test-fixture id="DifferentTypedMetas">
-      <template>
-        <iron-meta self type="foo" key="foobarKey"></iron-meta>
-        <iron-meta self type="bar" key="foobarKey"></iron-meta>
-        <iron-meta self key="defaultKey"></iron-meta>
-      </template>
-    </test-fixture>
-
     <test-fixture id="ClashingMetas">
       <template>
         <iron-meta self key="baz"></iron-meta>
@@ -118,42 +110,6 @@ suite('<iron-meta>', function () {
 
     test('can access each others value by key', function () {
       expect(metas[0].byKey('default2')).to.be.equal(metas[1].value);
-    });
-  });
-
-  suite('different-typed metas', function () {
-    var metas;
-
-    setup(function () {
-      metas = fixture('DifferentTypedMetas');
-    });
-
-    teardown(function () {
-      metas.forEach(function (meta) {
-        meta.key = null;
-      });
-    });
-
-    test('cache their values separately', function () {
-      var fooMeta = metas[0];
-      var barMeta = metas[1];
-
-      expect(fooMeta.value).to.not.be.equal(barMeta.value);
-      expect(fooMeta.byKey('foobarKey')).to.be.equal(fooMeta.value);
-      expect(barMeta.byKey('foobarKey')).to.be.equal(barMeta.value);
-    });
-
-    test('cannot access values of other types', function () {
-      var defaultMeta = metas[2];
-
-      expect(defaultMeta.byKey('foobarKey')).to.be.equal(undefined);
-    });
-
-    test('only list values of their type', function () {
-      metas.forEach(function (meta) {
-        expect(meta.list.length).to.be.equal(1);
-        expect(meta.list[0]).to.be.equal(meta.value);
-      })
     });
   });
 

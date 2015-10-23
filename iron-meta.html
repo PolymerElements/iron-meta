@@ -118,6 +118,8 @@ Or, in a Polymer element, you can include a meta in your template:
       /**
        * Only runs if someone invokes the factory/constructor directly
        * e.g. `new Polymer.IronMeta()`
+       * 
+       * @param {{type: (string|undefined), key: (string|undefined), value}=} config .
        */
       factoryImpl: function(config) {
         if (config) {

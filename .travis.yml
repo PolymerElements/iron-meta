@@ -5,6 +5,8 @@ before_script:
   - npm install bower
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
   - bower install
+  - npm install polylint
+  - polylint
 env:
   global:
     - secure: eGcuDAJt+1GPrC6u95vHufjnSXWbVBZpW7oKQhZjcHrN19l9COdOb7RVkTPsZzEanHaH/D6Psr4WJKyd72Wx5wj+bqGh4nPHTFSnK3+gNT4eJAgLvsxLwHxW8QkYYHEdZe8Wd6sOdal9geeLZ8fG9xELYEtuJR6lww5uLvFv/cw=

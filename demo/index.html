@@ -28,6 +28,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     The <code>value</code> stored at <code>key="info"</code> is <code><meta-test></meta-test></code>.
   </div>
 
+  <div class="vertical-section vertical-section-container centered">
+    <iron-meta type="type1" key="a" value="Polymer"></iron-meta>
+    <iron-meta type="type1" key="b" value="is"></iron-meta>
+    <iron-meta type="type2" key="a" value="wonderful"></iron-meta>
+    <iron-meta type="type2" key="b" value="<3"></iron-meta>
+    The <code>value(s)</code> stored at <code>type="type1"</code> are <code><type-one></type-one></code> and the <code>value(s)</code> stored at <code>type="type2"</code> are <code><type-two></type-two></code>.
+  </div>
+
   <script>
 
     Polymer({
@@ -38,6 +46,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.textContent = new Polymer.IronMetaQuery({key: 'info'}).value;
       }
 
+    });
+
+    Polymer({
+      is: 'type-one',
+
+      ready: function() {
+        this.textContent = new Polymer.IronMetaQuery({type: "type1"}).list;
+      }
+    });
+
+    Polymer({
+      is: 'type-two',
+
+      ready: function() {
+        this.textContent = new Polymer.IronMetaQuery({type: "type2"}).list;
+      }
     });
 
   </script>

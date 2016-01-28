@@ -43,15 +43,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </div>
 
   <script>
-
-    Polymer({
-
-      is: 'meta-test',
-
-      ready: function() {
-        this.textContent = new Polymer.IronMetaQuery({key: 'info'}).value;
-      }
-
+    document.addEventListener('WebComponentsReady', function() {
+      Polymer({
+        is: 'meta-test',
+        ready: function() {
+          this.textContent = new Polymer.IronMetaQuery({key: 'info'}).value;
+        }
+      });
     });
 
     Polymer({

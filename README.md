@@ -44,13 +44,13 @@ Now I can access that element (and it's metadata) from any iron-meta instance
 via the byKey method, e.g.
 
 ```javascript
-meta.byKey('info').getAttribute('value');
+meta.byKey('info');
 ```
 
 Pure imperative form would be like:
 
 ```javascript
-document.createElement('iron-meta').byKey('info').getAttribute('value');
+document.createElement('iron-meta').byKey('info');
 ```
 
 Or, in a Polymer element, you can include a meta in your template:
@@ -58,7 +58,7 @@ Or, in a Polymer element, you can include a meta in your template:
 ```html
 <iron-meta id="meta"></iron-meta>
 ...
-this.$.meta.byKey('info').getAttribute('value');
+this.$.meta.byKey('info');
 ```
 
 
@@ -90,13 +90,13 @@ Now I can access that element (and it's metadata) from any iron-meta instance
 via the byKey method, e.g.
 
 ```javascript
-meta.byKey('info').getAttribute('value');
+meta.byKey('info');
 ```
 
 Pure imperative form would be like:
 
 ```javascript
-document.createElement('iron-meta').byKey('info').getAttribute('value');
+document.createElement('iron-meta').byKey('info');
 ```
 
 Or, in a Polymer element, you can include a meta in your template:
@@ -104,7 +104,7 @@ Or, in a Polymer element, you can include a meta in your template:
 ```html
 <iron-meta id="meta"></iron-meta>
 ...
-this.$.meta.byKey('info').getAttribute('value');
+this.$.meta.byKey('info');
 ```
 
 

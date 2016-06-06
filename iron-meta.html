@@ -58,6 +58,7 @@ Or, in a Polymer element, you can include a meta in your template:
     // monostate data
     var metaDatas = {};
     var metaArrays = {};
+    var metaQueryElements = {};
     var singleton = null;
 
     Polymer.IronMeta = Polymer({
@@ -115,6 +116,42 @@ Or, in a Polymer element, you can include a meta in your template:
         hidden: true
       },
 
+      observers : ['_onValueChange(value.*)'],
+      
+      _onValueChange : function(change){
+        var index;
+        
+        if(metaQueryElements[this.type] && metaQueryElements[this.type][this.key]){
+          var queries = metaQueryElements[this.type][this.key];
+          var isSplices = false;
+          var path = change.path;
+          
+          if (change.path.match("splices$")) {
+            isSplices = true;
+            path = path.replace(/.splices$/, '');
+          }
+          
+          for(index = 0; index < queries.length; index++){
+            if(!isSplices){
+                queries[index].notifyPath(path, change.value);
+            } else {
+              queries[index].notifySplices(path, change.value.indexSplices);
+            }
+          }
+        }
+        
+      },
+      
+      _setQueriesValues : function(type, key, value){
+        if(metaQueryElements[type] && metaQueryElements[type][key]){
+          var queries = metaQueryElements[type][key];
+          var index;
+          
+          for(index = 0; index < queries.length; index++){
+              queries[index]._setValue(value);
+            }
+         }
+      },
       /**
        * Only runs if someone invokes the factory/constructor directly
        * e.g. `new Polymer.IronMeta()`
@@ -143,6 +180,8 @@ Or, in a Polymer element, you can include a meta in your template:
 
       _keyChanged: function(key, old) {
         this._resetRegistration(old);
+        this._setQueriesValues(this.type, old);
+        this._setQueriesValues(this.type, key, this.value);
       },
 
       _valueChanged: function(value) {
@@ -155,7 +194,7 @@ Or, in a Polymer element, you can include a meta in your template:
         }
       },
 
-      _typeChanged: function(type) {
+      _typeChanged: function(type, oldType) {
         this._unregisterKey(this.key);
         if (!metaDatas[type]) {
           metaDatas[type] = {};
@@ -166,6 +205,8 @@ Or, in a Polymer element, you can include a meta in your template:
         }
         this.list = metaArrays[type];
         this._registerKeyValue(this.key, this.value);
+        this._setQueriesValues(oldType, this.key);
+        this._setQueriesValues(type, this.key, this.value);
       },
 
       /**
@@ -299,23 +340,58 @@ Or, in a Polymer element, you can include a meta in your template:
           }
         }
       },
-
+      
       created: function() {
         // TODO(sjmiles): good for debugging?
         this._metaDatas = metaDatas;
         this._metaArrays = metaArrays;
       },
-
-      _keyChanged: function(key) {
-        this._setValue(this._metaData && this._metaData[key]);
+      
+      detached: function() {
+        this._unregisterElement(this.type, this.key);
       },
 
-      _typeChanged: function(type) {
-        this._metaData = metaDatas[type];
-        this.list = metaArrays[type];
-        if (this.key) {
-          this._keyChanged(this.key);
+      _keyChanged:function(newKey,oldKey) {
+          this._unregisterElement(this.type, oldKey);
+          this._registerElement(this.type, newKey);
+       },
+      
+      _registerElement:function(type, key) {
+        
+        if(!type || !key){
+          return;
         }
+        
+        if (!metaQueryElements[type]) {
+          metaQueryElements[type] = {};
+        }
+        
+        if(!metaQueryElements[type][key]){
+          metaQueryElements[type][key] = [];
+        }
+        
+        metaQueryElements[type][key].push(this);
+        this._setValue(this._metaData && this._metaData[key]);
+      },
+      
+      _unregisterElement:function(type, key) {
+        if (type in metaQueryElements) {
+          if (key in metaQueryElements[type]) {
+            if(metaQueryElements[type][key].indexOf(this) > -1) {
+              metaQueryElements[type][key].splice(metaQueryElements[type][key].indexOf(this),1);  //remove self from query list
+              if(!metaQueryElements[type][key].length){
+                delete metaQueryElements[type][key];
+              }
+            }
+          }
+        }
+      },
+
+      _typeChanged: function(newType, oldType) {
+        this._metaData = metaDatas[newType];
+        this.list = metaArrays[newType];
+        this._unregisterElement(oldType, this.key);
+        this._registerElement(newType, this.key);
       },
 
       /**

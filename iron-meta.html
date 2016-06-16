@@ -132,6 +132,10 @@ Or, in a Polymer element, you can include a meta in your template:
           }
           
           for(index = 0; index < queries.length; index++){
+            if(queries[index].value !== change.value){
+              queries[index]._setValue(change.value);
+              continue;
+            }
             if(!isSplices){
                 queries[index].notifyPath(path, change.value);
             } else {

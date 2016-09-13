@@ -126,13 +126,14 @@ Or, in a Polymer element, you can include a meta in your template:
           var isSplices = false;
           var path = change.path;
           
-          if (change.path.match("splices$")) {
+          if (change.path.match(".splices$")) {
             isSplices = true;
             path = path.replace(/.splices$/, '');
           }
           
           for(index = 0; index < queries.length; index++){
-            if(queries[index].value !== change.value){
+            if((isSplices && queries[index].value !== change.base)
+            		&& (path === 'value' && queries[index].value !== change.value)){
               queries[index]._setValue(change.value);
               continue;
             }

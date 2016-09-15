@@ -19,12 +19,18 @@
     "polymer": "polymer/polymer#2.0-preview"
   },
   "devDependencies": {
-    "paper-styles": "polymerelements/paper-styles.git#2.0-preview",
+    "paper-styles": "polymerelements/paper-styles#2.0-preview",
     "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
     "web-component-tester": "^4.0.0",
     "test-fixture": "polymerelements/test-fixture#custom-elements-v1",
     "webcomponentsjs": "webcomponents/webcomponentsjs#v1"
   },
   "main": "iron-meta.html",
-  "ignore": []
+  "ignore": [],
+  "resolutions": {
+    "paper-styles": "2.0-preview",
+    "iron-flex-layout": "2.0-preview",
+    "polymer": "2.0-preview",
+    "webcomponentsjs": "v1"
+  }
 }

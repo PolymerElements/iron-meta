@@ -89,6 +89,16 @@ Or, in a Polymer element, you can include a meta in your template:
         }
       },
 
+      get list() {
+        var type = this.type;
+
+        if (type) {
+          return Object.keys(IronMeta.types[this.type]).map(function(key) {
+            return metaDatas[this.type][key];
+          }, this);
+        }
+      },
+
       byKey(key) {
         this.key = key;
         return this.value;
@@ -163,9 +173,7 @@ Or, in a Polymer element, you can include a meta in your template:
       },
 
       get list() {
-        return Object.keys(metaDatas[this.type]).map(function(key) {
-          return metaDatas[this.type][key];
-        }, this);
+        return this.__meta && this.__meta.list;
       },
 
       _selfChanged: function(self) {

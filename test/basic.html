@@ -31,7 +31,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('byKey', function() {
         var meta = new Polymer.IronMeta({
-          key: 'info'
+          key: 'info',
+          value: 'foo/bar'
         });
 
         expect(meta.value).to.be.eql('foo/bar');

@@ -16,7 +16,7 @@
     "url": "git://github.com/PolymerElements/iron-meta.git"
   },
   "dependencies": {
-    "polymer": "polymer/polymer#2.0-preview"
+    "polymer": "polymer/polymer#^2.0.0-rc.1"
   },
   "devDependencies": {
     "paper-styles": "polymerelements/paper-styles#2.0-preview",

@@ -99,7 +99,7 @@ Or, in a Polymer element, you can include a meta in your template:
         }
       },
 
-      byKey(key) {
+      byKey: function(key) {
         this.key = key;
         return this.value;
       }
@@ -158,7 +158,7 @@ Or, in a Polymer element, you can include a meta in your template:
       },
 
       __computeMeta: function(type, key, value) {
-        let meta = new Polymer.IronMeta({
+        var meta = new Polymer.IronMeta({
           type: type,
           key: key
         });

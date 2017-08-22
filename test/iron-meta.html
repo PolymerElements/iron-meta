@@ -20,8 +20,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-    <link rel="import" href="../iron-meta.html">
-    <link rel="import" href="../../test-fixture/test-fixture.html">
+    <script type="module" src="../iron-meta.js"></script>
+    <script type="module" src="../../test-fixture/test-fixture.js"></script>
 
   </head>
   <body>
@@ -55,7 +55,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
-    <script>
+    <script type="module">
+import { IronMeta } from '../iron-meta.js';
+import '../../test-fixture/test-fixture.js';
 suite('<iron-meta>', function () {
   suite('basic behavior', function () {
 
@@ -196,14 +198,14 @@ suite('<iron-meta>', function () {
     });
 
     test('gets value by type and key', function() {
-      expect(new Polymer.IronMeta({
+      expect(new IronMeta({
         type: meta.type,
         key: meta.key
       }).value).to.be.equal(meta.value);
     });
   });
 });
-    </script>
+</script>
 
   </body>
 </html>

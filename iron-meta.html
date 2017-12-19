@@ -57,7 +57,11 @@ Or, in a Polymer element, you can include a meta in your template:
 
     /**
      * @constructor
-     * @param {{type: (string|null)=, key: (string|null)=, value: *=}=} options
+     * @param {{
+     *   type: (string|null|undefined),
+     *   key: (string|null|undefined),
+     *   value: *,
+     * }=} options
      */
     function IronMeta(options) {
       this.type = (options && options.type) || 'default';

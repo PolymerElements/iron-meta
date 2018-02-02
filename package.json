@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-meta",
+  "private": true,
+  "description": "Useful for sharing information across a DOM tree",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-meta.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}

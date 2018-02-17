@@ -68,8 +68,8 @@ interface IronMetaElement extends Polymer.Element {
    */
   self: boolean|null|undefined;
   hostAttributes: object|null;
-  list: object|null;
-  _selfChanged(self: any): any;
+  readonly list: any;
+  _selfChanged(self: any): void;
 
   /**
    * Retrieves meta data value by key.

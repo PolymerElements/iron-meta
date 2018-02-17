@@ -9,6 +9,7 @@
  */
 
 /// <reference path="../polymer/types/polymer.d.ts" />
+/// <reference path="iron-meta-extra.d.ts" />
 
 /**
  * `iron-meta` is a generic element you can use for sharing information across the DOM tree.

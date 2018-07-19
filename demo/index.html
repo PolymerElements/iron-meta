@@ -43,34 +43,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </div>
 
   <script type="module">
-import '@polymer/paper-styles/demo-pages.js';
-import { IronMeta } from '../iron-meta.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-Polymer({
-  is: 'meta-test',
-  ready: function() {
-    this.textContent = new IronMeta({key: 'info'}).value;
-  }
-});
+    import '@polymer/paper-styles/demo-pages.js';
 
-Polymer({
-  is: 'type-one',
+    import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
 
-  ready: function() {
-    var resultList = new IronMeta({type: 'type1'}).list;
-    this.textContent = JSON.stringify(resultList);
-  }
-});
+    import {IronMeta} from '../iron-meta.js';
 
-Polymer({
-  is: 'type-two',
+    Polymer({
+      is: 'meta-test',
+      ready: function() {
+        this.textContent = new IronMeta({key: 'info'}).value;
+      }
+    });
 
-  ready: function() {
-    var resultList = new IronMeta({type: 'type2'}).list;
-    this.textContent = JSON.stringify(resultList);
-  }
-});
-</script>
+    Polymer({
+      is: 'type-one',
+
+      ready: function() {
+        var resultList = new IronMeta({type: 'type1'}).list;
+        this.textContent = JSON.stringify(resultList);
+      }
+    });
+
+    Polymer({
+      is: 'type-two',
+
+      ready: function() {
+        var resultList = new IronMeta({type: 'type2'}).list;
+        this.textContent = JSON.stringify(resultList);
+      }
+    });
+  </script>
 
 </body>
 </html>

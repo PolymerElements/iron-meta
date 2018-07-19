@@ -121,7 +121,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
 @group Iron Elements
 @demo demo/index.html
-@hero hero.svg
 @element iron-meta
 */
 Polymer({

@@ -30,17 +30,6 @@ export const IronMeta = function(options) {
   }
 };
 
-/** @type {string|null|undefined} */
-IronMeta.prototype.type;
-/** @type {string|null|undefined} */
-IronMeta.prototype.key;
-/** @type {*} */
-IronMeta.prototype.value;
-/** @type {!Array<*>} */
-IronMeta.prototype.list;
-/** @type {function(string):*} */
-IronMeta.prototype.byKey;
-
 // This function is used to convince Closure not to remove constructor calls
 // for instances that are not held anywhere. For example, when
 // `new IronMeta({...})` is used only for the side effect of adding a value.
@@ -92,6 +81,17 @@ IronMeta.prototype = {
     return this.value;
   }
 };
+
+/** @type {string|null|undefined} */
+IronMeta.prototype.type;
+/** @type {string|null|undefined} */
+IronMeta.prototype.key;
+/** @type {*} */
+IronMeta.prototype.value;
+/** @type {!Array<*>} */
+IronMeta.prototype.list;
+/** @type {function(string):*} */
+IronMeta.prototype.byKey;
 
 var metaDatas = IronMeta.types;
 

@@ -12,32 +12,28 @@ import '@polymer/polymer/polymer-legacy.js';
 
 import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
 
-/**
- * @constructor
- * @param {{
- *   type: (string|null|undefined),
- *   key: (string|null|undefined),
- *   value: *,
- * }=} options
- */
-export const IronMeta = function(options) {
-  IronMeta[' '](options);
+export class IronMeta {
+  /**
+   * @param {{
+   *   type: (string|null|undefined),
+   *   key: (string|null|undefined),
+   *   value: *,
+   * }=} options
+   */
+  constructor(options) {
+    IronMeta[' '](options);
 
-  this.type = (options && options.type) || 'default';
-  this.key = options && options.key;
-  if (options && 'value' in options) {
-    this.value = options.value;
+    /** @type {string} */
+    this.type = (options && options.type) || 'default';
+    /** @type {string|null|undefined} */
+    this.key = options && options.key;
+    if (options && 'value' in options) {
+      /** @type {*} */
+      this.value = options.value;
+    }
   }
-};
 
-// This function is used to convince Closure not to remove constructor calls
-// for instances that are not held anywhere. For example, when
-// `new IronMeta({...})` is used only for the side effect of adding a value.
-IronMeta[' '] = function() {};
-
-IronMeta.types = {};
-
-IronMeta.prototype = {
+  /** @return {*} */
   get value() {
     var type = this.type;
     var key = this.key;
@@ -45,8 +41,9 @@ IronMeta.prototype = {
     if (type && key) {
       return IronMeta.types[type] && IronMeta.types[type][key];
     }
-  },
+  }
 
+  /** @param {*} value */
   set value(value) {
     var type = this.type;
     var key = this.key;
@@ -59,8 +56,9 @@ IronMeta.prototype = {
         type[key] = value;
       }
     }
-  },
+  }
 
+  /** @return {!Array<*>} */
   get list() {
     var type = this.type;
 
@@ -74,24 +72,24 @@ IronMeta.prototype = {
         return metaDatas[this.type][key];
       }, this);
     }
-  },
+  }
 
-  byKey: function(key) {
+  /**
+   * @param {string} key
+   * @return {*}
+   */
+  byKey(key) {
     this.key = key;
     return this.value;
   }
 };
 
-/** @type {string|null|undefined} */
-IronMeta.prototype.type;
-/** @type {string|null|undefined} */
-IronMeta.prototype.key;
-/** @type {*} */
-IronMeta.prototype.value;
-/** @type {!Array<*>} */
-IronMeta.prototype.list;
-/** @type {function(string):*} */
-IronMeta.prototype.byKey;
+// This function is used to convince Closure not to remove constructor calls
+// for instances that are not held anywhere. For example, when
+// `new IronMeta({...})` is used only for the side effect of adding a value.
+IronMeta[' '] = function() {};
+
+IronMeta.types = {};
 
 var metaDatas = IronMeta.types;
 

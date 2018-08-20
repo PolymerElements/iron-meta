@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'meta-test',
       ready: function() {
         this.textContent = new IronMeta({key: 'info'}).value;
-      }
+      },
     });
 
     Polymer({
@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         var resultList = new IronMeta({type: 'type1'}).list;
         this.textContent = JSON.stringify(resultList);
-      }
+      },
     });
 
     Polymer({
@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         var resultList = new IronMeta({type: 'type2'}).list;
         this.textContent = JSON.stringify(resultList);
-      }
+      },
     });
   </script>
 

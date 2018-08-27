@@ -106,9 +106,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
 
           test('all cache all meta values', function() {
-            metas.forEach(function(meta, index) {
+            metas.forEach(function(meta) {
               expect(meta.list.length).to.be.equal(metas.length);
-              expect(meta.list[index].value).to.be.equal(meta.value);
+              expect(meta.list.indexOf(meta.value) >= 0).to.be.true;
             });
           });
 
@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             metas[0].value = null;
 
             expect(metas[0].list.length).to.be.equal(2);
-            expect(metas[0].list).to.be.deep.equal([metas[1], metas[2]])
+            expect(metas[0].list).to.have.members([metas[1], metas[2]])
           });
 
           test('can access each others value by key', function() {

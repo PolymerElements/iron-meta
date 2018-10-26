@@ -135,6 +135,7 @@ Or, in a Polymer element, you can include a meta in your template:
 Polymer({
 
   is: 'iron-meta',
+  _template: null,
 
   properties: {
 

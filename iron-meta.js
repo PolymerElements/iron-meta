@@ -60,18 +60,18 @@ export class IronMeta {
 
   /** @return {!Array<*>} */
   get list() {
-    var type = this.type;
-
-    if (type) {
-      var items = IronMeta.types[this.type];
-      if (!items) {
-        return [];
-      }
-
-      return Object.keys(items).map(function(key) {
-        return metaDatas[this.type][key];
-      }, this);
+    if (!this.type) {
+      return [];
     }
+
+    var items = IronMeta.types[this.type];
+    if (!items) {
+      return [];
+    }
+
+    return Object.keys(items).map(function(key) {
+      return metaDatas[this.type][key];
+    }, this);
   }
 
   /**

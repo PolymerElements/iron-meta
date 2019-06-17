@@ -127,14 +127,11 @@ Or, in a Polymer element, you can include a meta in your template:
     <iron-meta id="meta"></iron-meta>
     ...
     this.$.meta.byKey('info');
-
-@group Iron Elements
-@demo demo/index.html
-@element iron-meta
 */
 Polymer({
 
   is: 'iron-meta',
+  /** @override */
   _template: null,
 
   properties: {
